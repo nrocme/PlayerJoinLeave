@@ -1,4 +1,4 @@
-package github.nrocme.playerjoinleave.events;
+package github.nrocme.events;
 
 import github.nrocme.playerjoinleave.PlayerJoinLeave;
 import org.bukkit.*;
@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.meta.FireworkMeta;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import org.bukkit.Sound;
 
 
 public class OnJoin implements Listener
@@ -31,11 +32,15 @@ public class OnJoin implements Listener
     {
         Player p = e.getPlayer();
         String name = p.getName();
+
+        // join message
         if (plugin.getConfig().getBoolean("messages.join-message.isOn")) {
             e.setJoinMessage(ChatColor.translateAlternateColorCodes(
                     '&', this.plugin.getConfig().getString("messages.join-message.message").replace("%player%", name))
             );
         }
+
+        // fireworks on join with delay
         Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
             public void run() {
                 if (plugin.getConfig().getBoolean("firework.isOn")) {
@@ -43,9 +48,30 @@ public class OnJoin implements Listener
                 }
             }
         }, plugin.getConfig().getInt("firework.delay"));
+
+        // sound on join with delay
+        Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            public void run() {
+                if (plugin.getConfig().getBoolean("sounds.isOn")) {
+                    joinSound(p);
+                }
+            }
+        }, plugin.getConfig().getInt("sounds.delay"));
     }
 
-    private Firework buildFirework(Location loc) {
+
+    private void joinSound(Player p)
+    {
+        float volume = (float)(plugin.getConfig().getDouble("sounds.volume"));
+        float pitch = (float)(plugin.getConfig().getDouble("sounds.pitch"));
+        p.playSound(p.getLocation(), Sound.valueOf(
+                Objects.requireNonNull(plugin.getConfig().getString("sounds.sound")).toUpperCase()), volume, pitch
+        );
+    }
+
+
+    private Firework buildFirework(Location loc)
+    {
         Firework firework = (Firework) loc.getWorld().spawnEntity(loc, EntityType.FIREWORK);
         FireworkMeta fwm = firework.getFireworkMeta();
         fwm.addEffect(FireworkEffect.builder()

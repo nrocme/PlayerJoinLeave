@@ -1,7 +1,7 @@
 package github.nrocme.playerjoinleave;
 
-import github.nrocme.playerjoinleave.events.OnJoin;
-import github.nrocme.playerjoinleave.events.OnLeave;
+import github.nrocme.events.OnJoin;
+import github.nrocme.events.OnLeave;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

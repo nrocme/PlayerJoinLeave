@@ -1,4 +1,4 @@
-package github.nrocme.playerjoinleave.events;
+package github.nrocme.events;
 
 import github.nrocme.playerjoinleave.PlayerJoinLeave;
 import org.bukkit.ChatColor;
